@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Registro de Ingresos y Gastos</title>
+
+<!-- Manifest para PWA -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Librería de gráficas -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+
+  /* LOGIN */
+  #loginBox {
+    max-width: 350px;
+    margin: auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  #app {
+    display: none;
+  }
+
+  form {
+    max-width: 450px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #555;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  button {
+    margin-top: 20px;
+    width: 100%;
+    background: #222;
+    color: #fff;
+    padding: 12px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #000;
+  }
+
+  .success {
+    display: none;
+    background: #dff0d8;
+    color: #3c763d;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  /* DASHBOARD */
+  #dashboard {
+    max-width: 600px;
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .stats {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+  }
+
+  .card {
+    width: 32%;
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+
+  canvas {
+    margin-top: 25px;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <h2>Acceso privado</h2>
+  <label>Usuario</label>
+  <input id="user" type="text">
+
+  <label>Contraseña</label>
+  <input id="pass" type="password">
+
+  <button onclick="login()">Entrar</button>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+<h2>Registro de Ingresos y Gastos</h2>
+
+<form id="financeForm">
+  
+  <label for="tipo">Tipo:</label>
+  <select id="tipo" name="tipo" required>
+    <option value="">Selecciona...</option>
+    <option value="Ingreso">Ingreso</option>
+    <option value="Gasto">Gasto</option>
+  </select>
+
+  <label for="categoria">Categoría:</label>
+  <input type="text" id="categoria" name="categoria" placeholder="Ej. Comida, gasolina, venta..." required />
+
+  <label for="monto">Monto (MXN):</label>
+  <input type="number" id="monto" name="monto" step="0.01" required />
+
+  <label for="descripcion">Descripción:</label>
+  <textarea id="descripcion" name="descripcion" rows="3" placeholder="Descripción opcional"></textarea>
+
+  <label for="fecha">Fecha:</label>
+  <input type="date" id="fecha" name="fecha" required />
+
+  <button type="submit">Registrar</button>
+
+  <div class="success" id="successMsg">¡Registro guardado correctamente!</div>
+
+</form>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <h2>Dashboard</h2>
+
+  <div class="stats">
+    <div class="card">
+      <h3>Ingresos</h3>
+      <p id="statIngresos">$0</p>
+    </div>
+    <div class="card">
+      <h3>Gastos</h3>
+      <p id="statGastos">$0</p>
+    </div>
+    <div class="card">
+      <h3>Balance</h3>
+      <p id="statBalance">$0</p>
+    </div>
+  </div>
+
+  <canvas id="chart"></canvas>
+</div>
+
+</div>
+
+<script>
+/* ----------- LOGIN PRIVADO ------------- */
+function login() {
+  const u = document.getElementById("user").value;
+  const p = document.getElementById("pass").value;
+
+  if (u === "admin" && p === "1234") {
+    localStorage.setItem("logged", "yes");
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("app").style.display = "block";
+  } else {
+    alert("Credenciales incorrectas");
+  }
+}
+
+if (localStorage.getItem("logged") === "yes") {
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("app").style.display = "block";
+}
+
+/* ----------- REGISTRO EN GOOGLE SHEETS ------------- */
+document.getElementById("financeForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const data = {
+    tipo: document.getElementById("tipo").value,
+    categoria: document.getElementById("categoria").value,
+    monto: parseFloat(document.getElementById("monto").value),
+    descripcion: document.getElementById("descripcion").value,
+    fecha: document.getElementById("fecha").value
+  };
+
+  fetch("https://script.google.com/macros/s/AKfycbwKHGHS4o6HJK9j3-QEX4iev5ElHoQFWwTcvrGU45_ssIRglXzuBLTtguxeR-MG2pZY/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+  .then(() => {
+      document.getElementById("successMsg").style.display = "block";
+      document.getElementById("financeForm").reset();
+      loadDashboard();
+      setTimeout(()=> {
+        document.getElementById("successMsg").style.display = "none";
+      }, 3000);
+  });
+});
+
+/* ----------- DASHBOARD AUTOMÁTICO ------------- */
+async function loadDashboard() {
+  const url = "https://script.google.com/macros/s/AKfycbwKHGHS4o6HJK9j3-QEX4iev5ElHoQFWwTcvrGU45_ssIRglXzuBLTtguxeR-MG2pZY/exec?read";
+
+  const res = await fetch(url);
+  const rows = await res.json();
+
+  let ingresos = 0;
+  let gastos = 0;
+
+  let meses = {};
+  
+  rows.forEach(r => {
+    const monto = parseFloat(r[3]);
+    const tipo = r[1];
+    const fecha = r[5].substring(0,7);
+
+    if (!meses[fecha]) meses[fecha] = 0;
+    meses[fecha] += (tipo === "Ingreso" ? monto : -monto);
+
+    if (tipo === "Ingreso") ingresos += monto;
+    if (tipo === "Gasto") gastos += monto;
+  });
+
+  document.getElementById("statIngresos").textContent = "$" + ingresos;
+  document.getElementById("statGastos").textContent = "$" + gastos;
+  document.getElementById("statBalance").textContent = "$" + (ingresos - gastos);
+
+  updateChart(meses);
+}
+
+/* ----------- GRÁFICA MENSUAL ------------- */
+let chart;
+
+function updateChart(meses) {
+  const labels = Object.keys(meses);
+  const values = Object.values(meses);
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(document.getElementById("chart"), {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: "Balance mensual",
+        data: values,
+        borderWidth: 2
+      }]
+    }
+  });
+}
+
+loadDashboard();
+
+/* ----------- PWA: SERVICE WORKER ------------- */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+
+</body>
+</html>
