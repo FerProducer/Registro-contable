@@ -220,7 +220,7 @@ document.getElementById("financeForm").addEventListener("submit", function(e){
     fecha: document.getElementById("fecha").value
   };
 
-  fetch("https://script.google.com/macros/s/AKfycbwKHGHS4o6HJK9j3-QEX4iev5ElHoQFWwTcvrGU45_ssIRglXzuBLTtguxeR-MG2pZY/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbz0k9rW9NIP7SLKhYG-9c9fbESCbmVtZ84t17xhJiAO2erIujxvRIzb6Gi4dN8HS5fL/exec", {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
@@ -238,7 +238,7 @@ document.getElementById("financeForm").addEventListener("submit", function(e){
 
 /* ----------- DASHBOARD AUTOMÁTICO ------------- */
 async function loadDashboard() {
-  const url = "https://script.google.com/macros/s/AKfycbwKHGHS4o6HJK9j3-QEX4iev5ElHoQFWwTcvrGU45_ssIRglXzuBLTtguxeR-MG2pZY/exec?read";
+  const url = "https://script.google.com/macros/s/AKfycbz0k9rW9NIP7SLKhYG-9c9fbESCbmVtZ84t17xhJiAO2erIujxvRIzb6Gi4dN8HS5fL/exec";
 
   const res = await fetch(url);
   const rows = await res.json();
