@@ -189,28 +189,59 @@
 </div>
 
 <script>
+
+/* ----------- CONFIGURACIÓN DE USUARIOS ------------- */
+const USERS = {
+  "admin": {
+    pass: "1234",
+    api: "https://script.google.com/macros/s/AKfycbz0k9rW9NIP7SLKhYG-9c9fbESCbmVtZ84t17xhJiAO2erIujxvRIzb6Gi4dN8HS5fL/exec" 
+  },
+  "fernanda": {
+    pass: "4321",
+    api: "https://script.google.com/macros/s/AKfycbzsvnCMdWVV2U2JoyUGl_6N8moL_Bm8PfNa3kv1FBeMDYdyjyonRfFMvvF2J8iEPALw/exec"
+  }
+};
+
+let CURRENT_API = null;
+
 /* ----------- LOGIN PRIVADO ------------- */
 function login() {
-  const u = document.getElementById("user").value;
+  const u = document.getElementById("user").value.toLowerCase();
   const p = document.getElementById("pass").value;
 
-  if (u === "admin" && p === "1234") {
-    localStorage.setItem("logged", "yes");
+  if (USERS[u] && USERS[u].pass === p) {
+    CURRENT_API = USERS[u].api;
+    localStorage.setItem("logged", u);
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("app").style.display = "block";
+    loadDashboard();
   } else {
     alert("Credenciales incorrectas");
   }
 }
 
-if (localStorage.getItem("logged") === "yes") {
+const savedUser = localStorage.getItem("logged");
+if (savedUser && USERS[savedUser]) {
+  CURRENT_API = USERS[savedUser].api;
   document.getElementById("loginBox").style.display = "none";
   document.getElementById("app").style.display = "block";
+  loadDashboard();
+}
+
+/* ------------- LOGOUT OPCIONAL -------------- */
+function logout(){
+  localStorage.removeItem("logged");
+  location.reload();
 }
 
 /* ----------- REGISTRO EN GOOGLE SHEETS ------------- */
 document.getElementById("financeForm").addEventListener("submit", function(e){
   e.preventDefault();
+
+  if(!CURRENT_API){
+    alert("Error: No se detectó usuario. Inicia sesión.");
+    return;
+  }
 
   const data = {
     tipo: document.getElementById("tipo").value,
@@ -220,7 +251,7 @@ document.getElementById("financeForm").addEventListener("submit", function(e){
     fecha: document.getElementById("fecha").value
   };
 
-  fetch("https://script.google.com/macros/s/AKfycbz0k9rW9NIP7SLKhYG-9c9fbESCbmVtZ84t17xhJiAO2erIujxvRIzb6Gi4dN8HS5fL/exec", {
+  fetch(CURRENT_API, {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
@@ -229,23 +260,23 @@ document.getElementById("financeForm").addEventListener("submit", function(e){
   .then(() => {
       document.getElementById("successMsg").style.display = "block";
       document.getElementById("financeForm").reset();
-      loadDashboard();
       setTimeout(()=> {
         document.getElementById("successMsg").style.display = "none";
       }, 3000);
+
+      loadDashboard();
   });
 });
 
 /* ----------- DASHBOARD AUTOMÁTICO ------------- */
 async function loadDashboard() {
-  const url = "https://script.google.com/macros/s/AKfycbz0k9rW9NIP7SLKhYG-9c9fbESCbmVtZ84t17xhJiAO2erIujxvRIzb6Gi4dN8HS5fL/exec";
+  if(!CURRENT_API) return;
 
-  const res = await fetch(url);
+  const res = await fetch(CURRENT_API);
   const rows = await res.json();
 
   let ingresos = 0;
   let gastos = 0;
-
   let meses = {};
   
   rows.forEach(r => {
@@ -289,13 +320,8 @@ function updateChart(meses) {
   });
 }
 
-loadDashboard();
-
-/* ----------- PWA: SERVICE WORKER ------------- */
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
 </script>
+
 
 </body>
 </html>
