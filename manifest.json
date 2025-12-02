@@ -1,0 +1,9 @@
+{
+  "name": "Registro de Finanzas",
+  "short_name": "Finanzas",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#222222",
+  "icons": []
+}
