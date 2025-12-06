@@ -33,6 +33,7 @@
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
+
   #app {
     display: none;
   }
@@ -132,23 +133,27 @@
   <button onclick="login()">Entrar</button>
 </div>
 
-<footer style="text-align:center; padding:20px; margin-top:20px; color:#555; font-size:14px;">
+<!-- FOOTER SOLO PARA LOGIN -->
+<footer id="loginFooter" style="text-align:center; padding:20px; margin-top:20px; color:#555; font-size:14px;">
   © 2025 ZOMOZ Estudio Creativo — Todos los derechos reservados.<br>
   Desarrollado por <strong>ZOMOZ Estudio Creativo</strong>.
 </footer>
 
-<div style="text-align:center; margin-top:40px;">
-  <img src="https://raw.githubusercontent.com/FerProducer/zomozwebINICIO/refs/heads/main/ZOMOZ%20letras%20rojonaranja.png" alt="Desarrollado por ZOMOZ Estudio Creativo" style="width:120px; opacity:0.9;">
+<!-- LOGO SOLO PARA LOGIN -->
+<div id="loginLogo" style="text-align:center; margin-top:40px;">
+  <img src="https://raw.githubusercontent.com/FerProducer/zomozwebINICIO/refs/heads/main/ZOMOZ%20letras%20rojonaranja.png"
+       alt="Desarrollado por ZOMOZ Estudio Creativo"
+       style="width:120px; opacity:0.9;">
 </div>
+
   
 <!-- APP -->
 <div id="app">
 
   <button onclick="logout()" style="background:#b33;margin-bottom:20px;">
   Cerrar sesión
-</button>
+  </button>
 
-  
 <h2>Registro de Ingresos y Gastos</h2>
 
 <form id="financeForm">
@@ -200,16 +205,7 @@
   <canvas id="chart"></canvas>
 </div>
 
-<footer style="text-align:center; padding:20px; margin-top:20px; color:#555; font-size:14px;">
-  © 2025 ZOMOZ Estudio Creativo — Todos los derechos reservados.<br>
-  Desarrollado por <strong>ZOMOZ Estudio Creativo</strong>.
-</footer>
-
-  <div style="text-align:center; margin-top:40px;">
-  <img src="https://raw.githubusercontent.com/FerProducer/zomozwebINICIO/refs/heads/main/ZOMOZ%20letras%20rojonaranja.png" alt="Desarrollado por ZOMOZ Estudio Creativo" style="width:120px; opacity:0.9;">
-</div>
-  
-</div>
+</div> <!-- END APP -->
 
 <script>
 
@@ -240,8 +236,15 @@ function login() {
   if (USERS[u] && USERS[u].pass === p) {
     CURRENT_API = USERS[u].api;
     localStorage.setItem("logged", u);
+
+    // OCULTAR LOGIN + FOOTER + LOGO
     document.getElementById("loginBox").style.display = "none";
+    document.getElementById("loginFooter").style.display = "none";
+    document.getElementById("loginLogo").style.display = "none";
+
+    // MOSTRAR APP
     document.getElementById("app").style.display = "block";
+
     loadDashboard();
   } else {
     alert("Credenciales incorrectas");
@@ -251,12 +254,17 @@ function login() {
 const savedUser = localStorage.getItem("logged");
 if (savedUser && USERS[savedUser]) {
   CURRENT_API = USERS[savedUser].api;
+
+  // AUTOLOGIN → OCULTAR LOGIN Y MOSTRAR APP
   document.getElementById("loginBox").style.display = "none";
+  document.getElementById("loginFooter").style.display = "none";
+  document.getElementById("loginLogo").style.display = "none";
+
   document.getElementById("app").style.display = "block";
   loadDashboard();
 }
 
-/* ------------- LOGOUT OPCIONAL -------------- */
+/* ------------- LOGOUT -------------- */
 function logout(){
   localStorage.removeItem("logged");
   location.reload();
@@ -313,15 +321,17 @@ async function loadDashboard() {
     const fecha = r[5].substring(0,7);
 
     if (!meses[fecha]) meses[fecha] = 0;
-    meses[fecha] += (tipo === "Ingreso" ? monto : -monto);
 
-    if (tipo === "Ingreso") ingresos += monto;
-    if (tipo === "Gasto") gastos += monto;
+    // Redondeo mientras se acumula
+    meses[fecha] = parseFloat((meses[fecha] + (tipo === "Ingreso" ? monto : -monto)).toFixed(2));
+
+    if (tipo === "Ingreso") ingresos = parseFloat((ingresos + monto).toFixed(2));
+    if (tipo === "Gasto") gastos = parseFloat((gastos + monto).toFixed(2));
   });
 
-  document.getElementById("statIngresos").textContent = "$" + ingresos;
-  document.getElementById("statGastos").textContent = "$" + gastos;
-  document.getElementById("statBalance").textContent = "$" + (ingresos - gastos);
+  document.getElementById("statIngresos").textContent = "$" + ingresos.toFixed(2);
+  document.getElementById("statGastos").textContent = "$" + gastos.toFixed(2);
+  document.getElementById("statBalance").textContent = "$" + (ingresos - gastos).toFixed(2);
 
   updateChart(meses);
 }
@@ -331,7 +341,9 @@ let chart;
 
 function updateChart(meses) {
   const labels = Object.keys(meses);
-  const values = Object.values(meses);
+
+  // Redondeo forzado para la gráfica
+  const values = Object.values(meses).map(v => parseFloat(v.toFixed(2)));
 
   if (chart) chart.destroy();
 
@@ -349,7 +361,6 @@ function updateChart(meses) {
 }
 
 </script>
-
 
 </body>
 </html>
