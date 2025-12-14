@@ -307,7 +307,75 @@ form button.error {
   75% { transform: translateX(4px); }
 }
 
-  
+/* ===== BOTÓN REGISTRAR — CENTRADO LIMPIO ===== */
+
+.btn-submit {
+  display: block;
+  margin: 20px auto 0;
+  width: 100%;
+  height: 48px;
+  background: linear-gradient(135deg, #111, #000);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition:
+    width 400ms ease-in-out,
+    border-radius 400ms ease-in-out,
+    box-shadow 250ms ease;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
+
+/* Hover */
+.btn-submit:hover {
+  box-shadow: 0 14px 32px rgba(0,0,0,0.45);
+}
+
+/* Texto */
+.btn-text {
+  transition: opacity 200ms ease;
+}
+
+/* Check */
+.btn-check {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* ===== MORPH AL CENTRO ===== */
+.btn-submit.is-loading {
+  width: 48px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Fade-out texto */
+.btn-submit.is-loading .btn-text {
+  opacity: 0;
+}
+
+/* Success */
+.btn-submit.is-success .btn-check {
+  opacity: 1;
+  animation: checkScale 250ms ease forwards;
+}
+
+@keyframes checkScale {
+  from { transform: scale(0.8); }
+  to { transform: scale(1); }
+}
+
+
+
 </style>
 </head>
 
@@ -369,7 +437,11 @@ form button.error {
   <label for="fecha">Fecha:</label>
   <input type="date" id="fecha" name="fecha" required />
 
-  <button type="submit">Registrar</button>
+  <button type="submit" class="btn-submit">
+  <span class="btn-text">Registrar</span>
+  <span class="btn-check">✓</span>
+</button>
+
 
   <div class="success" id="successMsg">¡Registro guardado correctamente!</div>
 
@@ -474,9 +546,9 @@ document.getElementById("financeForm").addEventListener("submit", function(e){
     return;
   }
 
-  const btn = this.querySelector("button[type='submit']");
-  btn.classList.add("loading");
-  btn.classList.remove("error");
+  const btn = this.querySelector(".btn-submit");
+
+  btn.classList.add("is-loading");
 
   const data = {
     tipo: document.getElementById("tipo").value,
@@ -494,23 +566,24 @@ document.getElementById("financeForm").addEventListener("submit", function(e){
   })
   .then(() => {
 
-      btn.classList.remove("loading");
+    // Success visual
+    btn.classList.add("is-success");
 
-      document.getElementById("successMsg").style.display = "block";
-      document.getElementById("errorMsg").style.display = "none";
+    if (navigator.vibrate) navigator.vibrate(40);
 
-      // HÁPTICO SUCCESS
-      if (navigator.vibrate) navigator.vibrate(40);
+    document.getElementById("successMsg").style.display = "block";
+    document.getElementById("errorMsg").style.display = "none";
+    document.getElementById("financeForm").reset();
 
-      document.getElementById("financeForm").reset();
+    setTimeout(() => {
+      btn.classList.remove("is-loading", "is-success");
+      document.getElementById("successMsg").style.display = "none";
+    }, 1600);
 
-      setTimeout(()=> {
-        document.getElementById("successMsg").style.display = "none";
-      }, 3000);
-
-      loadDashboard();
+    loadDashboard();
   });
 });
+
 
 
 /* ----------- DASHBOARD AUTOMÁTICO ------------- */
