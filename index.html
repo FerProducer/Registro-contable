@@ -116,6 +116,198 @@
   canvas {
     margin-top: 25px;
   }
+  
+  /* ===== ANIMACIÓN MODERNA BOTÓN REGISTRAR (SaaS Premium) ===== */
+form button[type="submit"] {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.2s cubic-bezier(.4,0,.2,1),
+    box-shadow 0.25s cubic-bezier(.4,0,.2,1),
+    background 0.25s ease;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+}
+
+/* Hover elegante */
+form button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+}
+
+/* Click realista */
+form button[type="submit"]:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* Efecto brillo moderno */
+form button[type="submit"]::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -120%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.25),
+    transparent
+  );
+  transform: skewX(-25deg);
+}
+
+/* Activación del brillo */
+form button[type="submit"]:hover::after {
+  animation: shine 0.9s ease forwards;
+}
+
+/* Animación tipo Stripe / Linear */
+@keyframes shine {
+  from { left: -120%; }
+  to { left: 180%; }
+} 
+  
+/* ===== BOTÓN REGISTRAR — ZOMOZ PREMIUM ===== */
+form button[type="submit"] {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #111, #000);
+  transition:
+    transform 0.25s cubic-bezier(.4,0,.2,1),
+    box-shadow 0.25s cubic-bezier(.4,0,.2,1),
+    background 0.3s ease;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
+
+/* Hover */
+form button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.45);
+}
+
+/* Click */
+form button[type="submit"]:active {
+  transform: scale(0.96);
+}
+
+/* Brillo premium */
+form button[type="submit"]::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -130%;
+  width: 60%;
+  height: 220%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,140,0,0.35),
+    transparent
+  );
+  transform: skewX(-25deg);
+}
+
+form button[type="submit"]:hover::after {
+  animation: zomozShine 0.9s ease forwards;
+}
+
+@keyframes zomozShine {
+  from { left: -130%; }
+  to { left: 180%; }
+}
+
+/* ===== ESTADO GUARDANDO ===== */
+form button.loading {
+  pointer-events: none;
+  background: linear-gradient(135deg, #222, #000);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+/* Texto oculto cuando carga */
+form button.loading span {
+  opacity: 0;
+}
+
+/* Loader */
+form button .loader {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: #ff8c00;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  opacity: 0;
+}
+
+form button.loading .loader {
+  opacity: 1;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+  
+ /* ===== SUCCESS CHECK ANIMADO ===== */
+.success {
+  position: relative;
+  padding-left: 44px;
+  animation: fadeInScale 0.4s ease forwards;
+}
+
+.success::before {
+  content: "✔";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%) scale(0);
+  width: 24px;
+  height: 24px;
+  background: #28a745;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  animation: checkPop 0.4s ease forwards;
+}
+
+@keyframes checkPop {
+  to { transform: translateY(-50%) scale(1); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ===== ERROR STATE ===== */
+form button.error {
+  background: linear-gradient(135deg, #7a1a1a, #400);
+  box-shadow: 0 6px 16px rgba(255,0,0,0.35);
+  animation: shake 0.35s ease;
+}
+
+.errorMsg {
+  display: none;
+  background: #f8d7da;
+  color: #842029;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 6px;
+  text-align: center;
+  animation: fadeInScale 0.3s ease forwards;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+  
 </style>
 </head>
 
@@ -181,6 +373,9 @@
 
   <div class="success" id="successMsg">¡Registro guardado correctamente!</div>
 
+  <div class="errorMsg" id="errorMsg">Error al guardar. Intenta nuevamente.</div>
+
+  
 </form>
 
 <!-- DASHBOARD -->
@@ -279,6 +474,10 @@ document.getElementById("financeForm").addEventListener("submit", function(e){
     return;
   }
 
+  const btn = this.querySelector("button[type='submit']");
+  btn.classList.add("loading");
+  btn.classList.remove("error");
+
   const data = {
     tipo: document.getElementById("tipo").value,
     categoria: document.getElementById("categoria").value,
@@ -294,8 +493,17 @@ document.getElementById("financeForm").addEventListener("submit", function(e){
     body: JSON.stringify(data)
   })
   .then(() => {
+
+      btn.classList.remove("loading");
+
       document.getElementById("successMsg").style.display = "block";
+      document.getElementById("errorMsg").style.display = "none";
+
+      // HÁPTICO SUCCESS
+      if (navigator.vibrate) navigator.vibrate(40);
+
       document.getElementById("financeForm").reset();
+
       setTimeout(()=> {
         document.getElementById("successMsg").style.display = "none";
       }, 3000);
@@ -303,6 +511,7 @@ document.getElementById("financeForm").addEventListener("submit", function(e){
       loadDashboard();
   });
 });
+
 
 /* ----------- DASHBOARD AUTOMÁTICO ------------- */
 async function loadDashboard() {
