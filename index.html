@@ -373,7 +373,30 @@ form button.error {
   from { transform: scale(0.8); }
   to { transform: scale(1); }
 }
+  
+/* MENSAJE LOGIN */
+#welcomeMsg{
+  display:none;
+  max-width:450px;
+  margin:20px auto;
+  background:#e8f4ff;
+  color:#084298;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  font-weight:bold;
+  animation:fadeIn .4s ease;
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-6px)}
+  to{opacity:1;transform:translateY(0)}
+}
 
+  /* DESVANECER MENSAJE LOGIN */
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
 
 
 </style>
@@ -392,6 +415,8 @@ form button.error {
 
   <button onclick="login()">Entrar</button>
 </div>
+
+  <div id="welcomeMsg"></div>
 
 <!-- FOOTER SOLO PARA LOGIN -->
 <footer id="loginFooter" style="text-align:center; padding:20px; margin-top:20px; color:#555; font-size:14px;">
@@ -489,6 +514,10 @@ const USERS = {
   "juan": {
     pass: "JuanMP8",
     api: "https://script.google.com/macros/s/AKfycbz35kDajP76mZoGD02OKLPn1xHm0R3fpkTIshrJMipcVhT8UHu3oS2XF8TB9Cmoj043/exec"
+  },
+ "panaderia":{
+    pass:"061124",
+    api:"https://script.google.com/macros/s/AKfycby6FTs-PbyB2Zo8WkUSacgxR4qIob_ClpARUlGkpFkbvt8mTXp-gCbh9YEKnX1xaudF-Q/exec"
   }
 };
 
@@ -508,6 +537,22 @@ function login() {
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("loginFooter").style.display = "none";
     document.getElementById("loginLogo").style.display = "none";
+
+    const msg = document.getElementById("welcomeMsg");
+msg.textContent = `Sesión iniciada como: ${u.toUpperCase()}`;
+msg.style.display = "block";
+
+// Desaparecer en 1.7 segundos
+setTimeout(() => {
+  msg.classList.add("fade-out");
+}, 1700);
+
+// Ocultar completamente después del fade
+setTimeout(() => {
+  msg.style.display = "none";
+  msg.classList.remove("fade-out");
+}, 2100);
+
 
     // MOSTRAR APP
     document.getElementById("app").style.display = "block";
