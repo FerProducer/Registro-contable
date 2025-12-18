@@ -7,12 +7,12 @@
   "theme_color": "#222222",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "https://raw.githubusercontent.com/FerProducer/Registro-contable/refs/heads/main/Gemini_Generated_Image_krdvjckrdvjckrdv.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "https://raw.githubusercontent.com/FerProducer/Registro-contable/refs/heads/main/Gemini_Generated_Image_krdvjckrdvjckrdv.png",
       "sizes": "512x512",
       "type": "image/png"
     }]
