@@ -398,7 +398,31 @@ form button.error {
   transition: opacity 0.4s ease;
 }
 
+/* ===== CENTRADO ABSOLUTO LOGIN ===== */
+body {
+  min-height: 100vh;
+}
 
+#loginBox {
+  position: relative;
+}
+
+/* Contenedor visual solo para login */
+body:has(#loginBox:not([style*="display: none"])) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Inputs centrados visualmente */
+#loginBox label,
+#loginBox input,
+#loginBox button {
+  text-align: center;
+}
+
+  
 </style>
 </head>
 
