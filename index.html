@@ -12,187 +12,139 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    margin: 0;
-    padding: 20px;
-  }
 
-  h2 {
-    text-align: center;
-    color: #333;
-  }
+/* =========================================================
+   MINI DESIGN SYSTEM — ZOMOZ (FINTECH / SaaS)
+========================================================= */
+:root {
+  --z-black: #0f0f10;
+  --z-black-soft: #1a1a1c;
 
-  /* LOGIN */
-  #loginBox {
-    max-width: 350px;
-    margin: auto;
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
+  --z-accent: #ff8c00;
+  --z-accent-soft: #ffb457;
 
-  #app {
-    display: none;
-  }
+  --z-bg: #f5f5f5;
+  --z-surface: #ffffff;
+  --z-border: #e3e3e3;
 
-  form {
-    max-width: 450px;
-    margin: auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
+  --z-success: #1f8f4a;
+  --z-error: #a32020;
 
-  label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
-    color: #555;
-  }
+  --z-text-main: #111;
+  --z-text-soft: #666;
+}
 
-  input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-  }
+/* =========================================================
+   BASE
+========================================================= */
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--z-bg);
+  margin: 0;
+  padding: 20px;
+  color: var(--z-text-main);
+}
 
-  button {
-    margin-top: 20px;
-    width: 100%;
-    background: #222;
-    color: #fff;
-    padding: 12px;
-    font-size: 18px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+h2 {
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
 
-  button:hover {
-    background: #000;
-  }
+/* =========================================================
+   LOGIN
+========================================================= */
+#loginBox {
+  max-width: 350px;
+  margin: auto;
+  background: var(--z-surface);
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid var(--z-border);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+}
 
-  .success {
-    display: none;
-    background: #dff0d8;
-    color: #3c763d;
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 6px;
-    text-align: center;
-  }
+#loginBox button {
+  background: var(--z-black);
+}
 
-  /* DASHBOARD */
-  #dashboard {
-    max-width: 600px;
-    margin: 30px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
+#loginFooter {
+  opacity: 0.6;
+  font-size: 13px;
+}
 
-  .stats {
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-  }
+#app {
+  display: none;
+}
 
-  .card {
-    width: 32%;
-    background: #fafafa;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  }
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+form {
+  max-width: 450px;
+  margin: auto;
+  background: var(--z-surface);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--z-border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
 
-  canvas {
-    margin-top: 25px;
-  }
-  
-  /* ===== ANIMACIÓN MODERNA BOTÓN REGISTRAR (SaaS Premium) ===== */
-form button[type="submit"] {
+label {
+  display: block;
+  margin-top: 16px;
+  font-weight: 500;
+  color: var(--z-text-soft);
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 11px;
+  margin-top: 6px;
+  border-radius: 8px;
+  font-size: 16px;
+  background: #fafafa;
+  border: 1px solid var(--z-border);
+  transition: border .2s ease, box-shadow .2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--z-accent);
+  box-shadow: 0 0 0 3px rgba(255,140,0,0.15);
+}
+
+/* =========================================================
+   BOTÓN PRINCIPAL (REFINADO)
+========================================================= */
+button {
+  margin-top: 20px;
+  width: 100%;
+  background: linear-gradient(135deg, var(--z-black), #000);
+  color: #fff;
+  padding: 12px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition:
-    transform 0.2s cubic-bezier(.4,0,.2,1),
-    box-shadow 0.25s cubic-bezier(.4,0,.2,1),
-    background 0.25s ease;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
-}
-
-/* Hover elegante */
-form button[type="submit"]:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.25);
-}
-
-/* Click realista */
-form button[type="submit"]:active {
-  transform: translateY(0) scale(0.97);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-}
-
-/* Efecto brillo moderno */
-form button[type="submit"]::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -120%;
-  width: 60%;
-  height: 200%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.25),
-    transparent
-  );
-  transform: skewX(-25deg);
-}
-
-/* Activación del brillo */
-form button[type="submit"]:hover::after {
-  animation: shine 0.9s ease forwards;
-}
-
-/* Animación tipo Stripe / Linear */
-@keyframes shine {
-  from { left: -120%; }
-  to { left: 180%; }
-} 
-  
-/* ===== BOTÓN REGISTRAR — ZOMOZ PREMIUM ===== */
-form button[type="submit"] {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #111, #000);
-  transition:
-    transform 0.25s cubic-bezier(.4,0,.2,1),
-    box-shadow 0.25s cubic-bezier(.4,0,.2,1),
-    background 0.3s ease;
+  transition: transform .2s ease, box-shadow .2s ease;
   box-shadow: 0 8px 22px rgba(0,0,0,0.35);
 }
 
-/* Hover */
-form button[type="submit"]:hover {
+button:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(0,0,0,0.45);
 }
 
-/* Click */
-form button[type="submit"]:active {
+button:active {
   transform: scale(0.96);
 }
 
-/* Brillo premium */
-form button[type="submit"]::after {
+button::after {
   content: "";
   position: absolute;
   top: -50%;
@@ -202,14 +154,14 @@ form button[type="submit"]::after {
   background: linear-gradient(
     120deg,
     transparent,
-    rgba(255,140,0,0.35),
+    rgba(255,255,255,0.18),
     transparent
   );
   transform: skewX(-25deg);
 }
 
-form button[type="submit"]:hover::after {
-  animation: zomozShine 0.9s ease forwards;
+button:hover::after {
+  animation: zomozShine .9s ease forwards;
 }
 
 @keyframes zomozShine {
@@ -217,129 +169,27 @@ form button[type="submit"]:hover::after {
   to { left: 180%; }
 }
 
-/* ===== ESTADO GUARDANDO ===== */
-form button.loading {
-  pointer-events: none;
-  background: linear-gradient(135deg, #222, #000);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-}
-
-/* Texto oculto cuando carga */
-form button.loading span {
-  opacity: 0;
-}
-
-/* Loader */
-form button .loader {
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  border: 3px solid rgba(255,255,255,0.3);
-  border-top-color: #ff8c00;
-  border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-  opacity: 0;
-}
-
-form button.loading .loader {
-  opacity: 1;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-  
- /* ===== SUCCESS CHECK ANIMADO ===== */
-.success {
-  position: relative;
-  padding-left: 44px;
-  animation: fadeInScale 0.4s ease forwards;
-}
-
-.success::before {
-  content: "✔";
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%) scale(0);
-  width: 24px;
-  height: 24px;
-  background: #28a745;
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  animation: checkPop 0.4s ease forwards;
-}
-
-@keyframes checkPop {
-  to { transform: translateY(-50%) scale(1); }
-}
-
-@keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* ===== ERROR STATE ===== */
-form button.error {
-  background: linear-gradient(135deg, #7a1a1a, #400);
-  box-shadow: 0 6px 16px rgba(255,0,0,0.35);
-  animation: shake 0.35s ease;
-}
-
-.errorMsg {
-  display: none;
-  background: #f8d7da;
-  color: #842029;
-  padding: 10px;
-  margin-top: 15px;
-  border-radius: 6px;
-  text-align: center;
-  animation: fadeInScale 0.3s ease forwards;
-}
-
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
-}
-
-/* ===== BOTÓN REGISTRAR — CENTRADO LIMPIO ===== */
-
+/* =========================================================
+   BOTÓN LOADING / SUCCESS (SIN JS)
+========================================================= */
 .btn-submit {
-  display: block;
-  margin: 20px auto 0;
-  width: 100%;
   height: 48px;
-  background: linear-gradient(135deg, #111, #000);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition:
-    width 400ms ease-in-out,
-    border-radius 400ms ease-in-out,
-    box-shadow 250ms ease;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.35);
 }
 
-/* Hover */
-.btn-submit:hover {
-  box-shadow: 0 14px 32px rgba(0,0,0,0.45);
+.btn-submit.is-loading {
+  width: 48px;
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-/* Texto */
 .btn-text {
-  transition: opacity 200ms ease;
+  transition: opacity .2s ease;
 }
 
-/* Check */
+.btn-submit.is-loading .btn-text {
+  opacity: 0;
+}
+
 .btn-check {
   position: absolute;
   inset: 0;
@@ -348,58 +198,254 @@ form button.error {
   justify-content: center;
   font-size: 22px;
   opacity: 0;
-  transform: scale(0.8);
 }
 
-/* ===== MORPH AL CENTRO ===== */
-.btn-submit.is-loading {
-  width: 48px;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-/* Fade-out texto */
-.btn-submit.is-loading .btn-text {
-  opacity: 0;
-}
-
-/* Success */
 .btn-submit.is-success .btn-check {
   opacity: 1;
-  animation: checkScale 250ms ease forwards;
 }
 
-@keyframes checkScale {
-  from { transform: scale(0.8); }
-  to { transform: scale(1); }
-}
-  
-/* MENSAJE LOGIN */
-#welcomeMsg{
-  display:none;
-  max-width:450px;
-  margin:20px auto;
-  background:#e8f4ff;
-  color:#084298;
-  padding:12px;
-  border-radius:10px;
-  text-align:center;
-  font-weight:bold;
-  animation:fadeIn .4s ease;
-}
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(-6px)}
-  to{opacity:1;transform:translateY(0)}
+/* =========================================================
+   SUCCESS / ERROR
+========================================================= */
+.success {
+  display: none;
+  background: rgba(31,143,74,0.12);
+  color: var(--z-success);
+  padding: 12px;
+  margin-top: 16px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
 }
 
-  /* DESVANECER MENSAJE LOGIN */
+.success::before {
+  content: "✔";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  background: var(--z-success);
+  color: #fff;
+  border-radius: 50%;
+}
+
+.errorMsg {
+  display: none;
+  background: rgba(163,32,32,0.12);
+  color: var(--z-error);
+  padding: 12px;
+  margin-top: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+#dashboard {
+  max-width: 600px;
+  margin: 40px auto 0;
+  background: var(--z-surface);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--z-border);
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: center;
+}
+
+.card {
+  flex: 1;
+  background: #fbfbfb;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--z-border);
+}
+
+#statBalance {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+canvas {
+  margin-top: 32px;
+}
+
+/* =========================================================
+   LOGIN MESSAGE
+========================================================= */
+#welcomeMsg {
+  display: none;
+  max-width: 450px;
+  margin: 20px auto;
+  background: rgba(255,140,0,0.12);
+  color: var(--z-black);
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
 .fade-out {
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity .4s ease;
 }
 
+  /* =========================================================
+   MOBILE-FIRST FINO — ZOMOZ
+========================================================= */
+@media (max-width: 768px) {
 
+  body {
+    padding: 12px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  form,
+  #dashboard,
+  #loginBox {
+    max-width: 100%;
+    padding: 20px;
+    margin: 0 auto 20px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  button {
+    height: 48px;
+    font-size: 17px;
+  }
+
+  /* Stats en columna (lectura clara) */
+  .stats {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card {
+    width: 100%;
+  }
+
+  #statBalance {
+    font-size: 24px;
+  }
+
+  canvas {
+    margin-top: 28px;
+  }
+
+  /* Login más centrado visualmente */
+  #loginBox {
+    margin-top: 8vh;
+  }
+
+  #loginLogo {
+    margin-top: 24px;
+  }
+
+  #loginFooter {
+    margin-top: 12px;
+  }
+
+}
+
+  /* =========================================================
+   DARK MODE — ZOMOZ (AUTO)
+========================================================= */
+@media (prefers-color-scheme: dark) {
+
+  body {
+    background: #0b0b0c;
+    color: #f1f1f1;
+  }
+
+  h2 {
+    color: #f1f1f1;
+  }
+
+  form,
+  #dashboard,
+  #loginBox {
+    background: #141416;
+    border-color: #242428;
+    box-shadow: none;
+  }
+
+  label {
+    color: #9a9a9a;
+  }
+
+  input,
+  select,
+  textarea {
+    background: #1a1a1c;
+    color: #f1f1f1;
+    border-color: #242428;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #777;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--z-accent);
+    box-shadow: 0 0 0 3px rgba(255,140,0,0.25);
+  }
+
+  button {
+    background: linear-gradient(135deg, #000, #0f0f10);
+  }
+
+  .card {
+    background: #1a1a1c;
+    border-color: #242428;
+  }
+
+  .success {
+    background: rgba(31,143,74,0.18);
+    color: #7fe0a7;
+  }
+
+  .errorMsg {
+    background: rgba(163,32,32,0.2);
+    color: #ff9c9c;
+  }
+
+  #welcomeMsg {
+    background: rgba(255,140,0,0.2);
+    color: #fff;
+  }
+
+  #loginFooter {
+    color: #888;
+  }
+
+}
+
+  
 </style>
+  
 </head>
 
 <body>
